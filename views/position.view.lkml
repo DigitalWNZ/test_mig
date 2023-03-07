@@ -35,6 +35,40 @@ view: position {
     sql: ${TABLE}.stock_id ;;
   }
 
+  parameter: params_test {
+    type: string
+    allowed_value: {
+      label: "stock"
+      value: "stock"
+    }
+    allowed_value: {
+      label: "user"
+      value: "user"
+    }
+  }
+
+
+  dimension: id {
+    type: string
+    sql:
+      CASE
+       WHEN {% parameter params_test %} = 'stock' THEN ${stock_id}
+       WHEN {% parameter params_test %} = 'user' THEN ${user_id}
+       ELSE NULL
+      END ;;
+  }
+
+  parameter: suggest_test {
+    type: string
+    suggest_dimension: stock_id
+  }
+
+  parameter: suggest_explore_test {
+    type: string
+    suggest_explore:quotation
+    suggest_dimension: quotation.stock_id
+  }
+
   dimension: user_id {
     type: number
     sql: ${TABLE}.user_id ;;

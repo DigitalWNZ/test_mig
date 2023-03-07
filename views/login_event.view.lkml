@@ -17,6 +17,42 @@ view: login_event {
     sql: ${TABLE}.country ;;
   }
 
+  parameter: period_start {
+    type: number
+  }
+
+  parameter: period_end {
+    type: number
+  }
+
+  parameter: pert {
+    type: number
+  }
+
+  filter: dt_filter {
+    type: date
+  }
+
+  parameter: dt_parms {
+    type: date
+  }
+
+  parameter: dtt_parms {
+    type: date_time
+  }
+
+  dimension: hello {
+    type: number
+    sql:
+      {% parameter pert %} * 10;;
+  }
+
+  dimension: show_my_dimension_filter {
+    sql: 0 ;;
+    html:
+      {{_filters['pert']}}*10 ;;
+  }
+
   dimension: event_id {
     type: string
     sql: ${TABLE}.event_id ;;
@@ -42,6 +78,7 @@ view: login_event {
   }
 
   dimension: user_id {
+    label: "the id of user"
     type: number
     sql: ${TABLE}.user_id ;;
   }
@@ -49,6 +86,17 @@ view: login_event {
   measure: count {
     type: count
     drill_fields: []
+  }
+
+  filter: eventdate {
+    type: date
+    suggest_dimension: event_date
+    suggest_explore: login_event
+  }
+
+  measure: dummy {
+    type: count
+    html: the value is {{count._rendered_value}} from {{_filters['eventdate']}} ;;
   }
 
   measure:ctd_user_id{
